@@ -1,40 +1,69 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import MobileNav from "./MobileNav"; // Import the new MobileNav component
 
 const Header = () => {
-  const headingStyle = {
-    transition: 'transform 0.3s ease, color 0.3s ease',
-  };
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 900);
 
-  const headingHoverStyle = {
-    transform: 'scale(1.1) rotate(2deg)',
-    color: '#fbbf24', // Change to a different color on hover
+  useEffect(() => {
+    const handleResize = () => {
+      const isCurrentlyMobile = window.innerWidth < 900;
+      setIsMobileView(isCurrentlyMobile);
+      // Close the menu if window is resized to desktop view
+      if (!isCurrentlyMobile) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
-    <header className="bg-blue-900 text-white p-4 shadow-md rounded-lg mx-4">
+    <header className="bg-blue-900 text-white p-4 shadow-lg-custom rounded-lg mx-4">
       <div className="container mx-auto flex justify-between items-center max-w-6xl">
-        <h1
-          className="text-3xl font-bold"
-          style={headingStyle}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = headingHoverStyle.transform;
-            e.currentTarget.style.color = headingHoverStyle.color;
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'scale(1) rotate(0)';
-            e.currentTarget.style.color = 'white'; // Reset to original color
-          }}
+        <Link to="/" style={{ textDecoration: "none" }}>
+          <h1 className="text-3xl font-bold">
+            Meet the Creator 2024
+          </h1>
+        </Link>
+
+        {/* Hamburger Icon */}
+        <button
+          className="lg:hidden flex items-center"
+          onClick={toggleMenu}
+          aria-label="Toggle menu"
         >
-          Meet the Creator 2024
-        </h1>
-        <nav className="flex space-x-4">
-          <a href="#register" className="hover:text-yellow-300 transition">Register Now</a>
-          <a href="#events" className="hover:text-yellow-300 transition">Explore Events</a>
-          <a href="#speakers" className="hover:text-yellow-300 transition">Speakers</a>
-          <a href="#schedule" className="hover:text-yellow-300 transition">Schedule</a>
-          <a href="#contact" className="hover:text-yellow-300 transition">Contact Us</a>
+          {isMenuOpen ? "✖" : "☰"} {/* Basic icons for open/close */}
+        </button>
+
+        {/* Navigation Links */}
+        <nav className={`hidden lg:flex lg:flex-row space-x-4`}>
+          <a href="#register" className="hover:text-yellow-300 transition">
+            Register Now
+          </a>
+          <Link to="/events" className="hover:text-yellow-300 transition">
+            Explore Events
+          </Link>
+          <a href="#speakers" className="hover:text-yellow-300 transition">
+            Speakers
+          </a>
+          <a href="#schedule" className="hover:text-yellow-300 transition">
+            Schedule
+          </a>
+          <Link to="/contact" className="hover:text-yellow-300 transition">
+            Contact
+          </Link>
         </nav>
       </div>
+
+      {/* Mobile Navigation Overlay */}
+      {isMobileView && isMenuOpen && <MobileNav toggleMenu={toggleMenu} />}
     </header>
   );
 };

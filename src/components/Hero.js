@@ -1,4 +1,6 @@
+// src/components/Hero.js
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
   return (
@@ -7,8 +9,8 @@ const Hero = () => {
         <h1 className="text-5xl text-white font-bold">Meet the Creator 2024</h1>
         <p className="text-white text-lg mt-4">Kollam, Kerala | Jan 10-12, 2024</p>
         <div className="mt-6">
-          <a href="#register" className="btn btn-primary mr-4">Register Now</a>
-          <a href="#events" className="btn btn-secondary">Explore Events</a>
+          {/* <a href="#register" className="btn btn-primary mr-4">Register Now</a> */}
+          <Link to="/events" className="btn btn-secondary">Explore Events</Link> {/* Update here */}
         </div>
       </div>
     </section>
